@@ -14,9 +14,11 @@ import getpass
 parser = argparse.ArgumentParser(description="Cert fix params")
 parser.add_argument('-user', dest='username', type=str, required=True)
 parser.add_argument('-pscFQDN', dest='pscHostname', type=str, required=True)
+parser.add_argument('-ssoDomain', dest='ssoDomain', type=str, required=True)
 
 username = parser.parse_args().username
 pscHostname = parser.parse_args().pscHostname
+ssoDomain = parser.parse_args().ssoDomain
 
 password = getpass.getpass(prompt="Enter SSO administrator password")
 
@@ -65,7 +67,7 @@ moRefs = []
 for line in string.split(mystdout.getvalue(), '\n'):
     moRefs.append(line)
 
-indexNum = moRefs.index("https://" + pscHostname + "/sts/STSService/mgmt.alpha.pv2.skyscapecs.net") - 3
+indexNum = moRefs.index("https://" + pscHostname + "/sts/STSService/" + ssoDomain) - 3
 old_cert = moRefs[indexNum]
 old_cert = "-----BEGIN CERTIFICATE-----\n" + re.sub("(.{64})", "\\1\n", old_cert, 0) + "\n-----END CERTIFICATE-----"
 
@@ -78,4 +80,3 @@ old_thumbprint = re.sub("SHA1 Fingerprint=", "", runLocalCmd("openssl x509 -in /
 old_thumbprint = re.sub("\n", "", old_thumbprint)
 print "replacing certs. This can take a couple of minutes..."
 print runLocalCmd("cd /usr/lib/vmidentity/tools/scripts/ && python ls_update_certs.py --url https://" + pscHostname + "/lookupservice/sdk --fingerprint " + old_thumbprint + " --certfile /certificate/new_machine.crt --user " + username + " --password '" + password + "'")
-
