@@ -44,7 +44,7 @@ def runLocalCmd(cmd):
     output = p1.communicate()[0]
     return output
 
-login = runLocalCmd("curl -u " + username + ":" + password + " 'https://" + pscHostname + "/lookupservice/mob?moid=ServiceRegistration&method=List' -i")
+login = runLocalCmd("curl -k -u " + username + ":'" + password + "' 'https://" + pscHostname + "/lookupservice/mob?moid=ServiceRegistration&method=List' -i")
 p = re.compile("Set-Cookie: vmware_debug_session=(.*); Path=/lookupservice")
 r = re.compile('.*vmware-session-nonce" type="hidden" value="(.*)"><p class="t.*')
 for line in string.split(login, '\n'):
@@ -55,7 +55,7 @@ for line in string.split(login, '\n'):
         if m2:
                 nonce = m2.group(1)
 
-data = runLocalCmd('curl -u ' + username + ":'" + password + "'" + ' "https://' + pscHostname + '/lookupservice/mob?moid=ServiceRegistration&method=List" -H "Cookie: vmware_debug_session=' + cookie + '" -H "Origin: https://' + pscHostname + '" -H "Accept-Encoding: gzip, deflate" -H "Accept-Language: en-US,en;q=0.8" -H "Content-Type: application/x-www-form-urlencoded" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" -H "Cache-Control: max-age=0" -H "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36" -H "Connection: keep-alive" -H "Referer: https://' + pscHostname + '/lookupservice/mob?moid=ServiceRegistration&method=List" --data "vmware-session-nonce=' + nonce + '&filterCriteria="%"3CfilterCriteria"%"3E"%"3C"%"2FfilterCriteria"%"3E" --compressed')
+data = runLocalCmd('curl -k -s -u ' + username + ":'" + password + "'" + ' "https://' + pscHostname + '/lookupservice/mob?moid=ServiceRegistration&method=List" -H "Cookie: vmware_debug_session=' + cookie + '" -H "Origin: https://' + pscHostname + '" -H "Accept-Encoding: gzip, deflate" -H "Accept-Language: en-US,en;q=0.8" -H "Content-Type: application/x-www-form-urlencoded" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" -H "Cache-Control: max-age=0" -H "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36" -H "Connection: keep-alive" -H "Referer: https://' + pscHostname + '/lookupservice/mob?moid=ServiceRegistration&method=List" --data "vmware-session-nonce=' + nonce + '&filterCriteria="%"3CfilterCriteria"%"3E"%"3C"%"2FfilterCriteria"%"3E" --compressed')
 
 old_stdout = sys.stdout
 sys.stdout = mystdout = StringIO()
