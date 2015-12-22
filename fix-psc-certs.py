@@ -81,7 +81,6 @@ if old_cert == "":
         certTemp2.append(i)
         old_cert = "".join(certTemp2)
 old_cert = "-----BEGIN CERTIFICATE-----\n" + re.sub("(.{64})", "\\1\n", old_cert, 0) + "\n-----END CERTIFICATE-----"
-print old_cert
 
 runLocalCmd("mkdir /certificate")
 f = open('/certificate/old_machine.crt', 'w')
