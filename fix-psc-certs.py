@@ -68,8 +68,20 @@ for line in string.split(mystdout.getvalue(), '\n'):
     moRefs.append(line)
 
 indexNum = moRefs.index("https://" + pscHostname + "/sts/STSService/" + ssoDomain) - 3
+#for i, v in enumerate(moRefs):
+#    print i, v
+certTemp = []
+certTemp2 = []
 old_cert = moRefs[indexNum]
+if old_cert == "":
+    for num in range(19):
+        num + 4
+        certTemp.append(re.sub("\r", "", moRefs[indexNum - num]))
+    for i in reversed(certTemp):
+        certTemp2.append(i)
+        old_cert = "".join(certTemp2)
 old_cert = "-----BEGIN CERTIFICATE-----\n" + re.sub("(.{64})", "\\1\n", old_cert, 0) + "\n-----END CERTIFICATE-----"
+print old_cert
 
 runLocalCmd("mkdir /certificate")
 f = open('/certificate/old_machine.crt', 'w')
